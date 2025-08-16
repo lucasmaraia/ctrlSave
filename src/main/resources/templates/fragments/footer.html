@@ -1,0 +1,18 @@
+<footer class="footer has-background-dark has-text-white-ter">
+    <div class="content has-text-centered">
+        <p>© 2025 GameSaves Hub. Todos os direitos reservados.</p>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const burger = document.querySelector('.navbar-burger');
+          const menu = document.querySelector('#navMenu');
+
+          burger.addEventListener('click', () => {
+            burger.classList.toggle('is-active');
+            menu.classList.toggle('is-active');
+          });
+        });
+    </script>
+    <script th:src="@{/js/script.js}"></script>
+</footer>
+
