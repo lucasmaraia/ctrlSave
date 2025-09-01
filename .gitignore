@@ -1,0 +1,11 @@
+# Build
+/target/
+
+# Banco H2
+*.db
+*.mv.db
+*.trace.db
+
+# IDE
+/.idea/
+*.iml
