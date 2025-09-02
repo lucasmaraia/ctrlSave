@@ -13,5 +13,4 @@ public class SaveDto {
     private MultipartFile file;
     private String jogo;
     private String descricao;
-    private String usuario;
 }

@@ -1,9 +1,6 @@
 package com.lucas.ctrlSave.model.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -19,6 +16,8 @@ public class SaveFile {
     private String jogo;
     private String descricao;
     private String path;
-    private String usuario;
     private String nameFile;
+
+    @ManyToOne
+    private User createdBy;
 }

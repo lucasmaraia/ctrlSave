@@ -2,10 +2,9 @@ async function enviarSave() {
     const jogo = document.getElementById('jogo').value;
     const descricao = document.getElementById('descricao').value;
     const file = document.getElementById('file').files[0];
-    const usuario = document.getElementById('usuario').value;
     const mensagem = document.getElementById('mensagem');
 
-    if (!jogo || !descricao || !file || !usuario) {
+    if (!jogo || !descricao || !file) {
         mensagem.textContent = 'Preencha todos os campos.';
         mensagem.classList.add('has-text-danger');
         return;
@@ -15,7 +14,6 @@ async function enviarSave() {
     formData.append("jogo", jogo);
     formData.append("descricao", descricao);
     formData.append("file", file);
-    formData.append("usuario", usuario);
 
     try {
         const response = await fetch('/saves/upload', {
@@ -70,7 +68,7 @@ async function getSaves() {
                                 <p>
                                     <strong>${save.jogo}</strong><br>
                                     ${save.descricao}<br>
-                                    <small>👤 por <strong>${save.usuario}</strong></small>
+                                    <small>👤 por <strong>${save.createdBy.username}</strong></small>
                                 </p>
                             </div>
                             <nav class="level is-mobile mt-3">

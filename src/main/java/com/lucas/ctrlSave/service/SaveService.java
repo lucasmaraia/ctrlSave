@@ -2,6 +2,7 @@ package com.lucas.ctrlSave.service;
 
 import com.lucas.ctrlSave.model.dto.SaveDto;
 import com.lucas.ctrlSave.model.entity.SaveFile;
+import com.lucas.ctrlSave.model.entity.User;
 import com.lucas.ctrlSave.repository.SaveFileRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,16 +17,26 @@ public class SaveService {
 
     private SaveFileRepository saveFileRepository;
 
+    private UserService userService;
+
     public ResponseEntity<?> uploadSave(SaveDto saveDto){
 
         try {
+
+            User user = userService.getUserAuthenticated();
+
+            if(user == null){
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Usuario não autentificado");
+            }
+
             String url = uploaderService.upload(saveDto.getFile());
 
             saveFileRepository.save(SaveFile.builder()
                     .jogo(saveDto.getJogo())
                     .descricao(saveDto.getDescricao())
-                    .usuario(saveDto.getUsuario())
                     .path(url)
+                    .createdBy(user)
                     .nameFile(saveDto.getFile().getOriginalFilename())
                     .build());
 
