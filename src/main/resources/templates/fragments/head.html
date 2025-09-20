@@ -7,12 +7,18 @@
         html, body {
           height: 100%;
         }
+
         body {
           display: flex;
           flex-direction: column;
         }
-        main {
-          flex: 1;
+
+        section.section {
+          flex: 1; /* faz o conteúdo ocupar o espaço e empurrar o footer */
+        }
+
+        .footer {
+          margin-top: auto; /* força o footer ir para o final */
         }
     </style>
 </head>

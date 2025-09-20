@@ -1,11 +1,8 @@
 <!DOCTYPE html>
-<html lang="pt-br" data-theme="light" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Cadastro de Usuário</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-</head>
+<html lang="pt-br" xmlns:th="http://www.w3.org/1999/xhtml" data-theme="light">
+<head th:replace="~{fragments/head :: head}"></head>
 <body>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
 <section class="section">
     <div class="container">
         <h1 class="title has-text-centered">Cadastro de Usuário</h1>
@@ -43,5 +40,7 @@
         </form>
     </div>
 </section>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>
