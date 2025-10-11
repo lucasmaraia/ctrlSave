@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.w3.org/1999/xhtml" data-theme="light">
+
+<head th:replace="~{fragments/head :: head}"></head>
+
+<body>
+
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="section">
+        <div class="container">
+            <div class="columns is-centered">
+                <div th:each="saveFile : ${saveFiles}" class="column is-half">
+                    <div class="box">
+                        <article class="media">
+                            <figure class="media-left">
+                                <p class="image is-128x128">
+                                    <img th:src="@{https://placehold.co/128x128}" alt="Game Cover">
+                                </p>
+                            </figure>
+                            <div class="media-content">
+                                <div class="content">
+                                    <p>
+                                        <strong th:text="${saveFile.jogo}">Nome do Jogo</strong><br>
+                                        <span th:text="${saveFile.descricao}">Descrição</span><br>
+                                        <small>👤 por <strong th:text="${saveFile.user.username}">Usuário</strong></small>
+                                    </p>
+                                </div>
+                                <nav class="level is-mobile mt-3">
+                                    <div class="level-left">
+                                        <a class="level-item ml-auto has-text-success" th:href="@{${saveFile.path}}" download>
+                                            <button class="button is-link">Baixar</button>
+                                        </a>
+                                    </div>
+                                </nav>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+
+</html>

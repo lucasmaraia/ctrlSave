@@ -24,9 +24,9 @@ public class SaveController {
 
     }
 
-    @GetMapping()
+    @GetMapping("/user")
     public ResponseEntity<?> getSaves(){
-        return saveService.getSaves();
+        return saveService.getSavesByUser();
     }
 
     @DeleteMapping()

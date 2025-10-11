@@ -21,6 +21,11 @@ async function enviarSave() {
             body: formData
         });
 
+        if (response.status === 401) {
+          console.error('Unauthorized: Please log in.');
+          window.location.href = '/login';
+        }
+
         if (response.ok) {
             mensagem.textContent = 'Save enviado com sucesso!';
             mensagem.classList.remove('has-text-danger');
@@ -40,9 +45,14 @@ async function enviarSave() {
 
 async function getSaves() {
     try {
-        const response = await fetch('/saves', {
+        const response = await fetch('/saves/user', {
             method: 'GET'
         });
+
+        if (response.status === 401) {
+          console.error('Unauthorized: Please log in.');
+          window.location.href = '/login';
+          }
 
         if (response.ok) {
             const saves = await response.json();
@@ -68,7 +78,7 @@ async function getSaves() {
                                 <p>
                                     <strong>${save.jogo}</strong><br>
                                     ${save.descricao}<br>
-                                    <small>👤 por <strong>${save.createdBy.username}</strong></small>
+                                    <small>👤 por <strong>${save.user.username}</strong></small>
                                 </p>
                             </div>
                             <nav class="level is-mobile mt-3">

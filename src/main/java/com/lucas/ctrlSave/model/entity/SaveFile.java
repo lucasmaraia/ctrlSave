@@ -19,5 +19,5 @@ public class SaveFile {
     private String nameFile;
 
     @ManyToOne
-    private User createdBy;
+    private User user;
 }

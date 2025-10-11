@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class SaveService {
@@ -23,25 +25,26 @@ public class SaveService {
 
         try {
 
-            User user = userService.getUserAuthenticated();
+            User user = getUser();
 
             if(user == null){
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body("Usuario não autentificado");
             }
 
-            String url = uploaderService.upload(saveDto.getFile());
+            String url = uploaderService.upload(saveDto.getFile(),
+                    createSavePath(user,saveDto.getFile().getOriginalFilename()));
 
             saveFileRepository.save(SaveFile.builder()
                     .jogo(saveDto.getJogo())
                     .descricao(saveDto.getDescricao())
                     .path(url)
-                    .createdBy(user)
+                    .user(user)
                     .nameFile(saveDto.getFile().getOriginalFilename())
                     .build());
 
             return ResponseEntity.status(HttpStatus.CREATED)
-                    .body("Save enviado com sucesso! URL: " + url);
+                    .body("Save enviado com sucesso!");
 
         } catch (Exception e) {
 
@@ -50,12 +53,14 @@ public class SaveService {
         }
     }
 
-    public ResponseEntity<?> getSaves(){
+    public ResponseEntity<?> getSavesByUser(){
 
         try{
 
+            List<SaveFile> saveFileList = saveFileRepository.findByUser(getUser());
+
             return ResponseEntity.status(HttpStatus.OK)
-                    .body(saveFileRepository.findAll());
+                    .body(saveFileList);
 
         }catch(Exception e) {
 
@@ -66,12 +71,21 @@ public class SaveService {
 
     }
 
+    public List<SaveFile> getAllSaveFiles(){
+        return saveFileRepository.findAll();
+    }
+
     public ResponseEntity<?> delete(Long id){
 
         try{
 
             SaveFile saveFile = saveFileRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("Save não encontrado"));
+
+            if(!saveFile.getUser().equals(getUser())){
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Usuario não autentificado");
+            }
 
             uploaderService.delete(saveFile.getNameFile());
 
@@ -86,6 +100,14 @@ public class SaveService {
                     .body("Erro ao deletear o save: " + e.getMessage());
         }
 
+    }
+
+    private User getUser(){
+        return (userService.getUserAuthenticated() != null) ? userService.getUserAuthenticated() : null;
+    }
+
+    private String createSavePath(User user, String fileName){
+        return "safeFiles/" + user.getUsername()+"/" + fileName;
     }
 
 }

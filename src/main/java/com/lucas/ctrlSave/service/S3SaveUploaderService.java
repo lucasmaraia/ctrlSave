@@ -43,17 +43,16 @@ public class S3SaveUploaderService {
                 .build();
     }
 
-    public String upload(MultipartFile multipartFile) throws IOException {
+    public String upload(MultipartFile multipartFile,String path) throws IOException {
         File file = convertToFile(multipartFile);
-        String keyName = multipartFile.getOriginalFilename();
 
         PutObjectRequest request = PutObjectRequest.builder()
                 .bucket(BUCKET_NAME)
-                .key(keyName)
+                .key(path)
                 .build();
 
         s3Client.putObject(request, RequestBody.fromFile(file));
-        return getPublicUrl(keyName);
+        return getPublicUrl(path);
     }
 
     public void delete(String keyName) {
