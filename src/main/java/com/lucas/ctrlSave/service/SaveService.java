@@ -32,18 +32,28 @@ public class SaveService {
                         .body("Usuario não autentificado");
             }
 
-            String url = uploaderService.upload(saveDto.getFile(),
-                    createSavePath(user,saveDto.getFile().getOriginalFilename()));
 
-            saveFileRepository.save(SaveFile.builder()
+
+           SaveFile saveFile = saveFileRepository.save(SaveFile.builder()
                     .jogo(saveDto.getJogo())
                     .descricao(saveDto.getDescricao())
-                    .path(url)
-                    .user(user)
+                    .nameImageFile(saveDto.getCapa().getOriginalFilename())
                     .nameFile(saveDto.getFile().getOriginalFilename())
+                    .user(user)
                     .build());
 
-            return ResponseEntity.status(HttpStatus.CREATED)
+            String salveFileUrl = uploaderService.upload(saveDto.getFile(),
+                    createSavePath(user, saveFile.getId(), saveFile.getNameFile()));
+
+            String saveImageUrl = uploaderService.upload(saveDto.getCapa(),
+                    createImagePath(user,saveFile.getId(),saveFile.getNameImageFile()));
+
+           saveFile.setPath(salveFileUrl);
+           saveFile.setImagePath(saveImageUrl);
+
+           saveFileRepository.save(saveFile);
+
+           return ResponseEntity.status(HttpStatus.CREATED)
                     .body("Save enviado com sucesso!");
 
         } catch (Exception e) {
@@ -87,7 +97,8 @@ public class SaveService {
                         .body("Usuario não autentificado");
             }
 
-            uploaderService.delete(saveFile.getNameFile());
+            uploaderService.delete(saveFile.getPath());
+            uploaderService.delete(saveFile.getImagePath());
 
             saveFileRepository.deleteById(id);
 
@@ -106,8 +117,12 @@ public class SaveService {
         return (userService.getUserAuthenticated() != null) ? userService.getUserAuthenticated() : null;
     }
 
-    private String createSavePath(User user, String fileName){
-        return "safeFiles/" + user.getUsername()+"/" + fileName;
+    private String createSavePath(User user, Long id, String saveFileName){
+        return "safeFiles/" + user.getUsername()+"/" + id + "/" + saveFileName;
+    }
+
+    private String createImagePath(User user, Long id, String imageFileName){
+        return "safeFiles/" + user.getUsername()+"/" +id+"/" + imageFileName;
     }
 
 }

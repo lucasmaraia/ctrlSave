@@ -18,9 +18,10 @@ public class SaveController {
     public ResponseEntity<?> uploadSave(
             @RequestParam("file") MultipartFile file,
             @RequestParam("jogo") String jogo,
-            @RequestParam("descricao") String descricao) {
+            @RequestParam("descricao") String descricao,
+            @RequestParam("capa") MultipartFile capa){
 
-      return saveService.uploadSave(new SaveDto(file,jogo,descricao));
+      return saveService.uploadSave(new SaveDto(file,jogo,descricao,capa));
 
     }
 

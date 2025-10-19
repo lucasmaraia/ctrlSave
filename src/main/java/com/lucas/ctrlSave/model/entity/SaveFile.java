@@ -17,6 +17,8 @@ public class SaveFile {
     private String descricao;
     private String path;
     private String nameFile;
+    private String imagePath;
+    private String nameImageFile;
 
     @ManyToOne
     private User user;

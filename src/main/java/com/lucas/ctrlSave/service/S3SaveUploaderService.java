@@ -16,6 +16,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import static org.springframework.web.servlet.function.RequestPredicates.contentType;
+
 @Service
 public class S3SaveUploaderService {
 
@@ -43,15 +45,19 @@ public class S3SaveUploaderService {
                 .build();
     }
 
-    public String upload(MultipartFile multipartFile,String path) throws IOException {
-        File file = convertToFile(multipartFile);
-
+    public String upload(MultipartFile multipartFile, String path) throws IOException {
         PutObjectRequest request = PutObjectRequest.builder()
                 .bucket(BUCKET_NAME)
                 .key(path)
+                .contentType(multipartFile.getContentType())
+                .contentLength(multipartFile.getSize())
                 .build();
 
-        s3Client.putObject(request, RequestBody.fromFile(file));
+        s3Client.putObject(request, RequestBody.fromInputStream(
+                multipartFile.getInputStream(),
+                multipartFile.getSize()
+        ));
+
         return getPublicUrl(path);
     }
 
@@ -64,13 +70,6 @@ public class S3SaveUploaderService {
         s3Client.deleteObject(deleteRequest);
     }
 
-    private File convertToFile(MultipartFile file) throws IOException {
-        File convFile = File.createTempFile("upload", null);
-        try (FileOutputStream fos = new FileOutputStream(convFile)) {
-            fos.write(file.getBytes());
-        }
-        return convFile;
-    }
 
     private String getPublicUrl(String keyName) {
         return String.format("https://%s.s3.%s.amazonaws.com/%s", BUCKET_NAME, REGION, keyName);

@@ -2,9 +2,10 @@ async function enviarSave() {
     const jogo = document.getElementById('jogo').value;
     const descricao = document.getElementById('descricao').value;
     const file = document.getElementById('file').files[0];
+    const capa = document.getElementById('image').files[0];
     const mensagem = document.getElementById('mensagem');
 
-    if (!jogo || !descricao || !file) {
+    if (!jogo || !descricao || !file || !capa) {
         mensagem.textContent = 'Preencha todos os campos.';
         mensagem.classList.add('has-text-danger');
         return;
@@ -14,6 +15,7 @@ async function enviarSave() {
     formData.append("jogo", jogo);
     formData.append("descricao", descricao);
     formData.append("file", file);
+    formData.append("capa", capa);
 
     try {
         const response = await fetch('/saves/upload', {
@@ -70,7 +72,7 @@ async function getSaves() {
                     <article class="media">
                         <figure class="media-left">
                             <p class="image is-128x128">
-                                <img src="https://placehold.co/128x128" alt="Game Cover">
+                                <img src="${save.imagePath}" alt="Game Cover">
                             </p>
                         </figure>
                         <div class="media-content">
